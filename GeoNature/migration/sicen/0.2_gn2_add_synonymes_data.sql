@@ -257,11 +257,21 @@ INSERT INTO public.tmp_syn (code_type, cd_nomenclature, mnemonique, label_defaul
 INSERT INTO public.tmp_syn (code_type, cd_nomenclature, mnemonique, label_default, initial_value) VALUES ('STATUT_VALID', '0', 'En attente de validation', 'En attente de validation', 'à valider');
 INSERT INTO public.tmp_syn (code_type, cd_nomenclature, mnemonique, label_default, initial_value) VALUES ('STATUT_VALID', '0', 'En attente de validation', 'En attente de validation', 'Pas encore validée');
 
+-- la table n'existe pas avec une instance geonature 2.15, du coup faut la creer
+CREATE TABLE ref_nomenclatures.t_synonymes (
+    id_type character varying(255),
+    cd_nomenclature character varying(255),
+    mnemonique character varying(255),
+    label_default character varying(255),
+    initial_value character varying(255),
+    id_nomenclature integer
+);
+
 INSERT INTO ref_nomenclatures.t_synonymes(
             id_type, cd_nomenclature, mnemonique, label_default, initial_value, 
             id_nomenclature)
 
-SELECT b.id_type , b.cd_nomenclature, b.mnemonique, b.label_default, b.initial_value, n.id_nomenclature
+SELECT  b.id_type , n.cd_nomenclature, b.mnemonique, b.label_default, s.initial_value, n.id_nomenclature
 FROM tmp_syn s
 JOIN ref_nomenclatures.bib_nomenclatures_types b
 ON s.code_type = b.mnemonique
