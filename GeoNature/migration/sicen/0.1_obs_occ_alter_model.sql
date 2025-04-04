@@ -103,9 +103,10 @@ CREATE OR REPLACE VIEW saisie.v_export_for_synthese_gn2 AS
 FROM saisie.saisie_observation s
 JOIN md.protocole p ON s.id_protocole = p.id_protocole
 JOIN ( SELECT DISTINCT suivi_saisie_observation.id_obs,
-    suivi_saisie_observation.date_operation AS date_insert
+    max(suivi_saisie_observation.date_operation) AS date_insert
     FROM saisie.suivi_saisie_observation
-    WHERE suivi_saisie_observation.operation = 'INSERT'::text) i ON s.id_obs = i.id_obs
+    WHERE suivi_saisie_observation.operation = 'INSERT'::text
+    GROUP BY suivi_saisie_observation.id_obs) i ON s.id_obs = i.id_obs
 LEFT JOIN ( SELECT DISTINCT suivi_saisie_observation.id_obs,
     max(suivi_saisie_observation.date_operation) AS date_last_update
     FROM saisie.suivi_saisie_observation
